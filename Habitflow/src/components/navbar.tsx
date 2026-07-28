@@ -6,7 +6,9 @@ import {
   Settings,
 } from "lucide-react";
 
- function Navbar() {
+function Navbar() {
+  const nav = ["Dashboard", "Goals", "Calendar", "Analytics", "Settings"]
+  const icons = [LayoutDashboard, Target, CalendarDays, ChartColumn, Settings]
   return (
     <nav className="bg-[#232729] border-b border-[#323638] px-8 py-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -24,32 +26,17 @@ import {
 
         {/* Navigation */}
         <div className="flex items-center gap-8">
-
-          <button className="flex items-center gap-2 text-[#A7BF80] font-medium">
-            <LayoutDashboard size={18} />
-            Dashboard
-          </button>
-
-          <button className="flex items-center gap-2 text-gray-400 hover:text-white transition">
-            <Target size={18} />
-            Goals
-          </button>
-
-          <button className="flex items-center gap-2 text-gray-400 hover:text-white transition">
-            <CalendarDays size={18} />
-            Calendar
-          </button>
-
-          <button className="flex items-center gap-2 text-gray-400 hover:text-white transition">
-            <ChartColumn size={18} />
-            Analytics
-          </button>
-
-          <button className="flex items-center gap-2 text-gray-400 hover:text-white transition">
-            <Settings size={18} />
-            Settings
-          </button>
-
+          {
+            nav.map((item, index) => {
+              const Icon = icons[index]
+              return (
+                <button key={index} className="flex items-center gap-2 text-[#A7BF80] font-medium hover:text-[#FFFFFF] transition-colors duration-200 ease-in cursor-pointer">
+                  <Icon size={18} />
+                  {item}
+                </button>
+              )
+            })
+          }
         </div>
 
         {/* User */}
