@@ -1,11 +1,15 @@
 import { useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 
 function Goals() {
 
     const navigate = useNavigate()
 
     return (
+
         <div className="min-h-screen w-screen bg-[#111111] text-white flex items-center justify-center px-8">
+
+               <Outlet />
             <div className="w-full max-w-6xl flex gap-8">
 
                 {/* Left Section */}
@@ -80,6 +84,8 @@ function Goals() {
 
             </div>
         </div>
+
+
     );
 }
 

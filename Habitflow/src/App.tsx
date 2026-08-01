@@ -2,6 +2,7 @@ import Index from "./pages"
 import Navbar from "./components/navbar.tsx"
 import { Routes, Route } from "react-router-dom"
 import Goals from "./pages/goals.tsx"
+import MainGoal from "./pages/maingoal.tsx"
 
 function App() {
   return (
@@ -9,9 +10,10 @@ function App() {
       <Navbar />
       <Routes>
         <Route path="/" element={<Index />} />
-        
-        <Route path="/goals" element={<Goals />}>
-          <Route path="maingoal" element={<h1>Main Goal</h1>} />
+
+        <Route path="/goals">
+          <Route index element={<Goals />} />
+          <Route path="maingoal" element={<MainGoal />} />
           <Route path="todaygoal" element={<h1>Today Goal</h1>} />
           <Route path="progress" element={<h1>Progress</h1>} />
         </Route>
