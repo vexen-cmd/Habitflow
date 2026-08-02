@@ -1,92 +1,116 @@
-import { useNavigate } from "react-router-dom";
-import { Outlet } from "react-router-dom";
+import { useState } from "react"
+import GoalsCard from "../components/goalsCard.tsx"
+import axios from "axios"
 
-function Goals() {
+function Goals(){
 
-    const navigate = useNavigate()
+const [userDetails,setuserDetails] = useState(localStorage.getItem("details") || "")
+const [inputValue,setinputValue] = useState("")
+return(
+        <div>
+        {!userDetails ? <div className="min-h-screen bg-[#0B0B0B] flex items-center justify-center px-6">
 
-    return (
+    <div className="w-full max-w-3xl">
 
-        <div className="min-h-screen w-screen bg-[#111111] text-white flex items-center justify-center px-8">
+        <div className="text-center">
 
-               <Outlet />
-            <div className="w-full max-w-6xl flex gap-8">
+            <span className="text-green-400 text-xs font-medium tracking-[0.25em] uppercase">
+                AI Goal Architect
+            </span>
 
-                {/* Left Section */}
-                <div className="flex-1 bg-[#1a1a1a] rounded-3xl p-8 border border-zinc-800">
+            <h1 className="mt-4 text-4xl md:text-5xl font-bold text-white leading-tight">
+                Let's build the
+                <br />
+                future version of you.
+            </h1>
 
-                    <h1 className="text-4xl font-bold mb-8">
-                        Today <span className="text-green-400">Stats</span>
-                    </h1>
+            <p className="mt-5 text-zinc-400 text-base leading-7 max-w-lg mx-auto">
+                Forget forms. Just tell me your story and I'll transform it
+                into a personalized roadmap with milestones, progress tracking,
+                and AI coaching.
+            </p>
 
-                    {/* Today's Stats */}
-                    <div className="grid grid-cols-2 gap-6">
-
-                        <div className="bg-[#242424] rounded-2xl p-6 h-36 border border-zinc-700">
-                            <p className="text-zinc-400 text-sm mb-2">
-                                Tasks Completed
-                            </p>
-
-                            <h2 className="text-4xl font-bold">00</h2>
-                        </div>
-
-                        <div className="bg-[#242424] rounded-2xl p-6 h-36 border border-zinc-700">
-                            <p className="text-zinc-400 text-sm mb-2">
-                                Goal Progress
-                            </p>
-
-                            <h2 className="text-4xl font-bold">0%</h2>
-                        </div>
-
-                        <div className="bg-[#242424] rounded-2xl p-6 h-36 border border-zinc-700">
-                            <p className="text-zinc-400 text-sm mb-2">
-                                Time Focused
-                            </p>
-
-                            <h2 className="text-4xl font-bold">0h</h2>
-                        </div>
-
-                        <div className="bg-[#242424] rounded-2xl p-6 h-36 border border-zinc-700">
-                            <p className="text-zinc-400 text-sm mb-2">
-                                Streak
-                            </p>
-
-                            <h2 className="text-4xl font-bold">0 🔥</h2>
-                        </div>
-
-                    </div>
-
-                </div>
-
-                {/* Right Section */}
-                <div className="w-80 bg-[#1a1a1a] rounded-3xl border border-zinc-800 p-6 flex flex-col gap-5">
-
-                    <button onClick={() => {
-                        console.log("main goal")
-                        navigate("maingoal")
-                    }} className="w-full rounded-xl bg-green-500 py-4 text-lg font-semibold transition hover:bg-green-600">
-                        Main Goal
-                    </button>
-
-                    <button onClick={() => {
-                        navigate("todaygoal")
-                    }} className="w-full rounded-xl bg-[#242424] border border-zinc-700 py-4 text-lg transition hover:bg-[#2e2e2e]">
-                        Today Goal
-                    </button>
-
-                    <button onClick={() => {
-                        navigate("progress")
-                    }} className="w-full rounded-xl bg-[#242424] border border-zinc-700 py-4 text-lg transition hover:bg-[#2e2e2e]">
-                        Progress
-                    </button>
-
-                </div>
-
-            </div>
         </div>
 
+        <div className="mt-14">
 
-    );
+            <textarea
+                rows={7}
+                placeholder="I want to become..."
+                value={inputValue}
+                onChange={(e)=>{
+                  const value=e.target.value
+                  if(!value) return;
+
+                  setinputValue(value)
+                }}
+                className="
+                    w-full
+                    bg-transparent
+                    text-lg
+                    text-white
+                    placeholder:text-zinc-600
+                    resize-none
+                    outline-none
+                    leading-9
+                    border-none
+                    overflow-hidden
+                "
+            />
+
+            <div className="mt-2 h-px bg-zinc-800"/>
+
+            <div className="flex items-center justify-between mt-3 text-sm text-zinc-600">
+
+                <span>
+                    Write naturally. No formatting needed.
+                </span>
+
+                <span>
+                    0 words
+                </span>
+
+            </div>
+
+        </div>
+
+        <div className="mt-12 flex justify-center">
+
+            <button 
+            onClick={()=>{
+              async () => {
+                // const response = await axios.post("https:/localhost:1134",inputValue)
+              }
+            }}
+                className="
+                    px-8
+                    py-3
+                    rounded-full
+                    bg-green-500
+                    text-black
+                    font-semibold
+                    text-sm
+                    hover:bg-green-400
+                    transition-all
+                    duration-300
+                    hover:scale-105
+                "
+            >
+                ✨ Generate My Journey
+            </button>
+
+        </div>
+
+    </div>
+
+</div>:
+<div>
+    <GoalsCard/>
+    </div>
+}
+        
+        </div>
+    )
 }
 
-export default Goals;
+export default Goals

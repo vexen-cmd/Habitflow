@@ -1,13 +1,47 @@
-import { useState } from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import Calendar from 'react-calendar';
+
+async function getMotivationalQuote() {
+  const response = await axios.get('https://motivational-spark-api.vercel.app/api/quotes');
+  return  response.data;
+}
+
+type Quote = {
+  quote: string;
+  author: string;
+};
 
 function Index() {
   const [value, setValue] = useState<Date>(new Date());
+  const [motivationQuotes,setmotivationQuotes] = useState <Quote|null>(null);
+
+useEffect (()=>{
+ getMotivationalQuote().then((data)=>{
+ const randomQuote = data[Math.floor(Math.random() * data.length)];
+ setmotivationQuotes(randomQuote)
+ })
+
+},[])
 
   return (
+    <div>
+      <div className='absolute top-30 left-1/2 -translate-x-1/2'>
+         <h1 className="text-center text-xl font-semibold text-zinc-100 leading-relaxed max-w-2xl mx-auto">
+  <span className="text-zinc-500 text-2xl">“</span>
+  {motivationQuotes?.quote ?? "Loading inspiration..."}
+  <span className="text-zinc-500 text-2xl">”</span>
+</h1>
+
+<p className="mt-4 text-center text-sm font-light uppercase tracking-[0.2em] text-zinc-400">
+  {motivationQuotes?.author
+    ? motivationQuotes.author
+    : "Loading..."}
+</p>
+      </div>
     <div className="flex justify-center items-center min-h-screen gap-6 ">
 
-      {/* Stats Card */}
+           {/* Stats Card */}
       <div className="bg-[#232729] rounded-xl p-5 w-64 h-64 flex flex-col justify-between shadow-lg">
 
         {/* Goals */}
@@ -51,9 +85,10 @@ function Index() {
         className="custom-calendar"
         value={value}
         onChange={(date: any) => setValue(date as Date)}
-      />
+        />
 
     </div>
+        </div>
   )
 }
 
