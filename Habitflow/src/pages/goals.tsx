@@ -1,125 +1,14 @@
 import { useState } from "react"
 import GoalsCard from "../components/goalsCard.tsx"
-import axios from "axios"
 import GoalDescription from "../components/GoalDescription.tsx";
-
+import SuggestedRoadmap from "../components/suggestedRoadmap.tsx";
+import {userGoalPost} from "../functions/resuable.tsx";
 
 function Goals() {
-const apiKey = import.meta.env.VITE_GEMINI_API;
-const openRouterApiKey = import.meta.env.VITE_OPENROUTER_API;
+// const apiKey = import.meta.env.VITE_GEMINI_API;
 const [userDetails, setuserDetails] = useState(localStorage.getItem("details") || "")
 const [inputValue, setinputValue] = useState("")
-
-async function userGoalPost(inputValue: string) {
-
-
-try {
-        console.log("Started")
-            const systemPrompt = `
-You are an AI Career Planner.
-
-Your purpose is to help users achieve positive, legal, ethical, educational, healthy, and career-focused goals.
-
-RULES:
-
-- Only support legal, ethical, and constructive goals.
-- Never generate roadmaps for illegal, harmful, violent, hateful, sexual, explicit, adult, fraudulent, or unethical activities.
-- If the goal is unsafe or inappropriate, return ONLY this JSON:
-
-{
-"rejected": true,
-"reason": "Short explanation.",
-"safeAlternative": "Suggest a positive alternative."
-}
-
-If the goal is acceptable, return ONLY valid JSON.
-
-DO NOT:
-- Use markdown.
-- Wrap the JSON in \`\`\`.
-- Add explanations before or after the JSON.
-- Include any extra keys.
-
-Return ONLY this JSON structure:
-
-{
-"rejected": false,
-"title": "string",
-"goalSummary": "string",
-"focusAreas": [
-"string"
-],
-"suggestedRoadmap": [
-{
-    "title": "string",
-    "description": "string"
-}
-]
-}
-
-Requirements:
-
-title:
-- Short and professional.
-- Maximum 6 words.
-
-goalSummary:
-- 2-3 sentences.
-- Around 50-80 words.
-- Explain what the user wants to achieve and the skills required.
-
-focusAreas:
-- 5-8 items.
-- Each item should be 1-3 words.
-- Include only technologies, concepts, or skills directly related to the goal.
-- No duplicates.
-
-suggestedRoadmap:
-- 6-10 steps.
-- Ordered from beginner to advanced.
-- Each step must contain:
-- title
-- description
-- Make the roadmap practical and realistic.
-
-`;
-
-    const response = await axios.post(
-    "https://openrouter.ai/api/v1/chat/completions",
-    {
-   model: "google/gemini-2.5-flash",
-        max_tokens: 700,
-        response_format: {
-        type: "json_object",
-        },
-
-        messages: [
-        {
-            role: "system",
-            content: systemPrompt,
-        },
-        {
-            role: "user",
-            content: inputValue,
-        },
-        ],
-    },
-    {
-        headers: {
-        Authorization: `Bearer ${openRouterApiKey}`,
-        "Content-Type": "application/json",
-        "HTTP-Referer": "http://localhost:5173",
-        "X-Title": "HabitFlow",
-        },
-    }
-    );
-    console.log("reached here")
-    const result = JSON.parse(response.data.choices[0].message.content);
-    return result;
-} catch (error: any) {
-    console.error(error.response?.data || error.message);
-}
-}
+const [wordCount, setWordCount] = useState(0);
 
 return (
     <div>
@@ -156,6 +45,7 @@ return (
                         onChange={(e) => {
                             const value = e.target.value
                             setinputValue(value)
+                            setWordCount(value.length)
                         }}
                         className="
 w-full
@@ -180,7 +70,7 @@ overflow-hidden
                         </span>
 
                         <span>
-                            0 words
+                            {wordCount} characters
                         </span>
 
                     </div>
@@ -193,6 +83,12 @@ overflow-hidden
                         onClick={async () => {
                             if (!inputValue) return;
                             const data = await userGoalPost(inputValue);
+                           console.log("Data received:", data);
+                           
+                           if(!data || data.rejected) {
+                            alert(`Goal rejected: ${data.reason}. Suggested alternative: ${data.safeAlternative}`);
+                            return;
+                           }
 
                             try {
                                 localStorage.setItem("details", JSON.stringify(data));
@@ -225,10 +121,15 @@ hover:scale-105
 
         </div> :
             <div className="flex justify-center">
-                <div className="flex flex-col">
+                <div className="w-full max-w-7xl px-6 py-12">    
+                <div className="flex flex-col gap-6">
                 <GoalsCard />
+                <div className="flex flex-col gap-6 md:flex-row">
+                <SuggestedRoadmap />
                 <GoalDescription/>
-
+                   
+                </div>
+                </div>
                 </div>
             </div>
         }

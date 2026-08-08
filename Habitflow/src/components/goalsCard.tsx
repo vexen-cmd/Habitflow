@@ -1,18 +1,10 @@
 import { Pencil } from "lucide-react";
-
-interface GoalHeroProps {
-  mainGoal: string;
-  summary: string;
-  progress: number;
-  completed: number;
-  total: number;
-}
-
+import {userDetails} from "../functions/resuable.tsx";
 
 function GoalCard() {
-  const userdetails = JSON.parse(localStorage.getItem("details") || "{}");
-  const userSuggestedRoadMap = userdetails.suggestedRoadmap
-  console.log(userdetails)
+
+  const userdetails = userDetails("");
+  console.log(userdetails);
   return (
     <section className="rounded-3xl border border-zinc-800 bg-[#111315] p-10 shadow-xl">
 
